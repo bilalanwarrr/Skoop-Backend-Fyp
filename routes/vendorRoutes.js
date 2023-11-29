@@ -15,6 +15,12 @@ router.post(
 	vendorController.signIn
 )
 
+router.patch(
+	'/edit-vendor',
+	authenticate.verifyVendor,
+	vendorController.editVendor
+)
+
 router.post(
 	'/addStockProduct',
 	authenticate.verifyVendor,

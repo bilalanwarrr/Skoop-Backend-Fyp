@@ -49,6 +49,30 @@ exports.signIn = asyncHandler(async (req, res) => {
 	});
 });
 
+exports.editVendor = asyncHandler(async (req, res, next) => {
+	console.log("Hello fuck")
+	let update = {
+		name: req.body.name,
+		email: req.body.email,
+		phone_number: req.body.phone_number,
+		description: req.body.description,
+		address: req.body.address,
+		picture: req.body.picture,
+	};
+	if (req.user.email !== req.body.email) {
+		var exists = await Vendor.findOne({
+			email: req.body.email,
+		});
+		if (exists) {
+			return res.status(409).json({
+				message: 'Email already associated with a restaurant.',
+			});
+		}
+	}
+	await Vendor.findByIdAndUpdate(req.user._id, update);
+	res.status(204).json();
+});
+
 
 exports.addStockProduct = asyncHandler( async(req, res, next) => {
     
