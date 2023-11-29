@@ -158,4 +158,28 @@ router.delete(
 	authenticate.verifyRestaurant,
 	restaurantController.deleteAccount
 );
+
+router.get(
+	'vendorItem/:id',
+	authenticate.verifyRestaurant,
+	restaurantController.getVendorItems
+)
+
+router.get(
+	'allVendors/',
+	authenticate.verifyRestaurant,
+	restaurantController.getAllVendors
+)
+
+router.get(
+	'allProducts/',
+	authenticate.verifyRestaurant,
+	restaurantController.getAllProducts
+)
+
+router.post(
+	'manualOrderStock/:id/:quantity',
+	authenticate.verifyRestaurant,
+	restaurantController.manualOrderStock
+)
 module.exports = router;

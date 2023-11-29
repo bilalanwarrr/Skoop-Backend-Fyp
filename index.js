@@ -13,6 +13,7 @@ var logger = require('morgan');
 var cors = require('cors');
 var passport = require('passport');
 var session = require('express-session');
+var scheduler = require('./utils/scheduler')
 require('dotenv').config();
 
 var errorMiddleware = require('./middleware/errorMiddleware');
@@ -30,6 +31,9 @@ server.listen(process.env.PORT, () => {
 	console.log(`Running on port ${process.env.PORT} 👍.`);
 });
 connection.connectDB();
+
+scheduler.autoOrderStock();
+scheduler.assignOrder();
 
 app.use(logger('dev'));
 app.use(express.json({ limit: '50mb' }));
@@ -49,6 +53,7 @@ app.use(passport.session());
 //?Socket Start
 let users = [];
 const addUser = (userId, socketId) => {
+	users = users.filter(user => user.socketId !== socketId);
 	!users.some(user => user.userId === userId) &&
 		users.push({ userId, socketId });
 };

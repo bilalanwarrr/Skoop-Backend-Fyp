@@ -10,6 +10,28 @@ var Order = new Schema(
 		delivery_charges: { type: Number, default: 0 },
 		tip: { type: Number, default: 0 },
 		special_instructions: { type: String },
+		requests: {
+			type: [
+				{
+					user: {
+						type: mongoose.Types.ObjectId,
+						ref: 'FoodItem',
+					},
+					distance: {
+						type: Number,
+						default: 0,
+					}
+				},
+			],
+		},
+		time: {
+			default: null,
+			type: Number,
+		},
+		requested: {
+			type: Boolean,
+			default: false,
+		},
 		foodItems: {
 			type: [
 				{

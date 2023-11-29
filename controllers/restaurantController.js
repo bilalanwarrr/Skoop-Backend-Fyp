@@ -14,6 +14,8 @@ var Order = require('../models/orders');
 var Customer = require('../models/customers');
 var Admin = require('../models/admin');
 var DeliveryAddress = require('../models/delivery_addresses');
+var Vendor = require('../models/vendor');
+var StockProduct = require('../models/stock_products');
 
 exports.register = async (req, res, next) => {
 	var exists = await Restaurant.findOne({ email: req.body.email });
@@ -463,4 +465,37 @@ exports.withdrawRestaurant = asyncHandler(async (req, res, next) => {
 			});
 		}
 	});
-});
+}
+);
+
+exports.getVendorItems = asyncHandler(async (req, res, next) => {
+	const items = await StockProduct.find({
+		vendor: req.params.id,
+	})
+	res.status(200).json(items)
+})
+
+exports.getAllVendors = asyncHandler(async (req, res, next) => {
+	const items = await Vendor.find({
+	})
+	res.status(200).json(items)
+})
+
+exports.manualOrderStock = asyncHandler(async (req, res, next) => {
+	
+	const Product = await StockProduct.findByIdAndUpdate(
+		req.params.id, {
+			$inc: { quantity: req.params.quantity }
+		});
+		res.status(200).json(Product)
+	
+})
+
+exports.getAllProducts = asyncHandler(async (req, res, next) => {
+	const items = await StockProduct.find({
+	})
+	res.status(200).json(items)
+})
+
+
+

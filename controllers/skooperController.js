@@ -104,17 +104,17 @@ exports.acceptRequest = asyncHandler(async (req, res, next) => {
 		lon: order.address.longitude,
 	};
 
-	var ids = [];
-	for (let i = 0; i < order.foodItems.length; i++) {
-		const rest = await FoodItem.findById(order.foodItems[i].item).populate(
-			'restaurant'
-		);
-		ids.push(rest.restaurant.fcm);
-	}
-	let messageRes = `${req.user.full_name} is coming to pick up order#${order.id}`;
-	let messageCus = `${req.user.full_name} has accepted to pick up your requested order#${order.id}`;
-	await notifications.sendPushNotification(ids, messageRes);
-	await notifications.sendPushNotification([order.customer.fcm], messageCus);
+	// var ids = [];
+	// for (let i = 0; i < order.foodItems.length; i++) {
+	// 	const rest = await FoodItem.findById(order.foodItems[i].item).populate(
+	// 		'restaurant'
+	// 	);
+	// 	ids.push(rest.restaurant.fcm);
+	// }
+	// let messageRes = `${req.user.full_name} is coming to pick up order#${order.id}`;
+	// let messageCus = `${req.user.full_name} has accepted to pick up your requested order#${order.id}`;
+	// await notifications.sendPushNotification(ids, messageRes);
+	// await notifications.sendPushNotification([order.customer.fcm], messageCus);
 
 	const distanceKm = calculateDistance(
 		point1.lat,
@@ -122,20 +122,27 @@ exports.acceptRequest = asyncHandler(async (req, res, next) => {
 		point1.lon,
 		point2.lon
 	);
-	var remainingTime = Math.ceil(
-		(distanceKm * 1000) / (req.user.speed * 16.667)
-	);
-	remainingTime = `${remainingTime} minutes`;
-	const newConversation = new Conversation({
-		members: [req.user._id, order.customer],
-	});
+
 	await Order.findByIdAndUpdate(req.params.id, {
-		scooper: req.user._id,
-		$inc: { status: 1 },
-		remainingTime,
+		requested: true,
+		time: Date.now(),
+		$push: { requests: { user: req.user.id, distance: distanceKm}}, 
+
 	});
-	await newConversation.save();
-	res.status(200).json({ message: 'Ride accepted' });
+	// var remainingTime = Math.ceil(
+	// 	(distanceKm * 1000) / (req.user.speed * 16.667)
+	// );
+	// remainingTime = `${remainingTime} minutes`;
+	// const newConversation = new Conversation({
+	// 	members: [req.user._id, order.customer],
+	// });
+	// await Order.findByIdAndUpdate(req.params.id, {
+	// 	scooper: req.user._id,
+	// 	$inc: { status: 1 },
+	// 	remainingTime,
+	// });
+	// await newConversation.save();
+	 res.status(200).json({ message: 'Request accepted' });
 });
 
 exports.pickedFood = asyncHandler(async (req, res, next) => {
