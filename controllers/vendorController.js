@@ -73,6 +73,10 @@ exports.editVendor = asyncHandler(async (req, res, next) => {
 	res.status(204).json();
 });
 
+exports.getVendor = asyncHandler(async (req, res) => {
+	res.json({ vendor: req.user });
+});
+
 
 exports.addStockProduct = asyncHandler( async(req, res, next) => {
     

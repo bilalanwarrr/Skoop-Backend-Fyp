@@ -21,6 +21,12 @@ router.patch(
 	vendorController.editVendor
 )
 
+router.get(
+	'/get-vendor',
+	authenticate.verifyVendor,
+	vendorController.getVendor
+);
+
 router.post(
 	'/addStockProduct',
 	authenticate.verifyVendor,
