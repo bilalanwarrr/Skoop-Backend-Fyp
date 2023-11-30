@@ -5,7 +5,7 @@ var asyncHandler = require('../middleware/asyncHandler');
 var ErrorHandler = require('../utils/error');
 var Vendor = require('../models/vendor');
 var stockProduct = require('../models/stock_products');
-var stockCategories = require('../models/stock_categories');
+var stockCategory = require('../models/stock_categories');
 
 exports.register = async (req, res, next) => {
 	var exists = await Vendor.findOne({ email: req.body.email });
@@ -83,7 +83,7 @@ exports.addStockProduct = asyncHandler( async(req, res, next) => {
     
     var exist = await stockProduct.findOne({
 		
-		name: req.body.name.toLowerCase(),
+		name: req.body.name,
 	});
     if (exist) {
 		return res.status(409).json({ message: 'Already exists.' });
@@ -156,17 +156,17 @@ else{
 exports.addStockCategory = asyncHandler( async(req, res, next) => {
     
     
-    var exist = await stockCategories.findOne({
+    var exist = await stockCategory.findOne({
 		
-		name: req.body.name.toLowerCase(),
+		title: req.body.title
 	});
     if (exist) {
 		return res.status(409).json({ message: 'Already exists.' });
 	}
     
-	const item = await stockCategories.create({
+	const item = await stockCategory.create({
 		vendor: req.user._id,
-		title: req.body.title.toLowerCase(),
+		title: req.body.title,
 		description: req.body.description,
 		image: req.body.image,
 		
@@ -175,17 +175,17 @@ exports.addStockCategory = asyncHandler( async(req, res, next) => {
 })
 
 exports.editStockCategory = asyncHandler(async (req, res, next) => {
-	let findCategories =  await stockCategories.findById(req.params.id)
+	let findCategories =  await stockCategory.findById(req.params.id)
 
 	if (findCategories !== null){
 	let update = {
 		vendor: req.user._id,
-		title: req.body.title.toLowerCase(),
+		title: req.body.title,
 		description: req.body.description,
 		image: req.body.image,
 	};
 
-	await stockCategories.findByIdAndUpdate(req.params.id, update);
+	await stockCategory.findByIdAndUpdate(req.params.id, update);
 	res.status(201).json({update});
 }
 else{
@@ -197,7 +197,7 @@ else{
 });
 
 exports.viewStockCategory = asyncHandler(async (req, res, next) => {
-	const stockCategories = await stockCategories.find({
+	const stockCategories = await stockCategory.find({
 		vendor: req.user._id,
 	});
 	res.status(200).json({ stockCategories });
@@ -205,10 +205,10 @@ exports.viewStockCategory = asyncHandler(async (req, res, next) => {
 
 exports.deleteStockCategory = asyncHandler(async (req, res, next) => {
 
-	let findCategories =  await stockCategories.findById(req.params.id)
+	let findCategories =  await stockCategory.findById(req.params.id)
 
 	if (findCategories !== null){
-	await stockCategories.deleteOne({
+	await stockCategory.deleteOne({
 		_id: req.params.id,
 	});
 	res.status(204).json({});

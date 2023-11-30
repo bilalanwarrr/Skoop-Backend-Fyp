@@ -48,19 +48,19 @@ router.delete(
 router.post(
 	'/addStockCategory',
 	authenticate.verifyVendor,
-	vendorController.addStockProduct
+	vendorController.addStockCategory
 );
 
 router.patch(
 	'/editStockCategory/:id',
 	authenticate.verifyVendor,
-	vendorController.editStockProduct
+	vendorController.editStockCategory
 );
 
 router.delete(
 	'/deleteStockCategory/:id',
 	authenticate.verifyVendor,
-	vendorController.deleteStockProduct
+	vendorController.deleteStockCategory
 );
 
 router.get(
@@ -72,7 +72,7 @@ router.get(
 router.get(
 	'/viewStockCategory',
 	authenticate.verifyVendor,
-	vendorController.viewStockProduct
+	vendorController.viewStockCategory
 );
 
 module.exports = router;
