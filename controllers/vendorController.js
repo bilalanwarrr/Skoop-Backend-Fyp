@@ -6,6 +6,7 @@ var ErrorHandler = require('../utils/error');
 var Vendor = require('../models/vendor');
 var stockProduct = require('../models/stock_products');
 var stockCategory = require('../models/stock_categories');
+var Order = require('../models/orders');
 
 exports.register = async (req, res, next) => {
 	var exists = await Vendor.findOne({ email: req.body.email });
@@ -219,4 +220,50 @@ else{
 		"message": "Not Found!"
 	})
 }
+});
+
+exports.predictionFunc = asyncHandler(async (req, res) => {
+	
+	const orders = await Order.find({}).populate('foodItems.item');
+
+	const foodItemsData = {};
+	orders.forEach(order => {
+		order.foodItems.forEach(foodItem => {
+			const itemId = foodItem.item.toString();
+			const restaurantId = foodItem.item.restaurant.toString();
+			if (restaurantId === req.params.id) {
+				if (!foodItemsData[itemId]) {
+					foodItemsData[itemId] = {
+						totalItems: 0,
+						time: 0,
+					};
+				}
+
+				const timeTaken = `${order.createdAt.getUTCHours()}:${order.createdAt.getMinutes()}`;
+				const [hoursStr, minutesStr] = timeTaken.split(':');
+				const hours = parseInt(hoursStr, 10);
+				const minutes = parseInt(minutesStr, 10);
+				foodItemsData[itemId].time += hours * 60 + minutes;
+				foodItemsData[itemId].totalItems += 1;
+			}
+		});
+	});
+
+	const foodItemNamesWithAvgTime = {};
+	Object.keys(foodItemsData).forEach(itemId => {
+		const itemData = foodItemsData[itemId];
+		const time = itemData.time / itemData.totalItems;
+		const hours = Math.floor(time / 60);
+		const remainingMinutes = itemData.time % 60;
+		const itemName = orders
+			.flatMap(order =>
+				order.foodItems.filter(item => item.item.toString() === itemId)
+			)
+			.map(item => item.item.name)[0];
+		if (itemName) {
+			foodItemNamesWithAvgTime[itemName] = `${hours}:${remainingMinutes}`;
+		}
+	});
+
+	res.status(200).json({ data: foodItemNamesWithAvgTime });
 });

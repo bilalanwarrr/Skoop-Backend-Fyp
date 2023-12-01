@@ -75,4 +75,8 @@ router.get(
 	vendorController.viewStockCategory
 );
 
+router.get(
+	'/prediction/:id', 
+	vendorController.predictionFunc);
+
 module.exports = router;
