@@ -26,6 +26,7 @@ var Chat = require('./routes/chatRoutes');
 var Admin = require('./routes/adminRoutes');
 var Skooper = require('./routes/skooperRoutes');
 const Vendor = require('./routes/vendorRoutes');
+const Image = require('./routes/uploadRoutes');
 
 server.listen(process.env.PORT, () => {
 	console.log(`Running on port ${process.env.PORT} 👍.`);
@@ -90,6 +91,8 @@ app.use('/chat', Chat);
 app.use('/admin', Admin);
 app.use('/skooper', Skooper);
 app.use('/vendor', Vendor);
+app.use('/image', Image);
+
 
 app.all('*', (req, res, next) => {
 	next(new ErrorHandler('Bad Request', 404));
