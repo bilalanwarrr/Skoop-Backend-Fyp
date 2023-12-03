@@ -61,6 +61,16 @@ exports.signIn = asyncHandler(async (req, res) => {
 	});
 });
 
+exports.checkEmail = asyncHandler(async (req, res, next) => {
+	var exists = await Restaurant.findOne({ email: req.params.email });
+	if (!exists) {
+		res.status(200).json({ success: false });
+	} else {
+		res.status(200).json({ success: true });
+	}
+});
+
+
 exports.getRestaurant = asyncHandler(async (req, res) => {
 	res.json({ restaurant: req.user });
 });

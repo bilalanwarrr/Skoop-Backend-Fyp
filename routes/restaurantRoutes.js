@@ -11,6 +11,10 @@ router.get(
 	authenticate.verifyRestaurant,
 	restaurantController.getRestaurant
 );
+
+// verify email
+router.get('/verify/:email', restaurantController.checkEmail);
+
 router.get(
 	'/get-singlefooditem/:id',
 	authenticate.verifyRestaurant,
