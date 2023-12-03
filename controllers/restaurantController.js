@@ -222,12 +222,27 @@ exports.viewFoodCategory = asyncHandler(async (req, res, next) => {
 	res.status(200).json({ foodCategory });
 });
 
+exports.viewFoodCategoryNameOnly = asyncHandler(async (req, res, next) => {
+	const foodCategory = await FoodCategory.find({
+		restaurant: req.user._id,
+	}).select('_id title');
+	res.status(200).json({ foodCategory });
+});
+
 exports.viewFoodItems = asyncHandler(async (req, res, next) => {
 	const foodItems = await FoodItem.find({
 		restaurant: req.user._id,
 	});
 	res.status(200).json({ foodItems });
 });
+
+exports.viewFoodNamesOnly = asyncHandler(async (req, res, next) => {
+	const foodItems = await FoodItem.find({
+		restaurant: req.user._id,
+	}).select('_id name');
+	res.status(200).json({ foodItems });
+});
+
 
 exports.editFoodCategory = asyncHandler(async (req, res, next) => {
 	let update = {
@@ -496,6 +511,3 @@ exports.getAllProducts = asyncHandler(async (req, res, next) => {
 	})
 	res.status(200).json(items)
 })
-
-
-

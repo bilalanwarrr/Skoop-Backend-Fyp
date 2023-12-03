@@ -36,6 +36,19 @@ router.get(
 	authenticate.verifyRestaurant,
 	restaurantController.viewFoodCategory
 );
+
+router.get(
+	'/get-allfooditemsnames',
+	authenticate.verifyRestaurant,
+	restaurantController.viewFoodNamesOnly
+);
+
+router.get(
+	'/viewallcategorynames',
+	authenticate.verifyRestaurant,
+	restaurantController.viewFoodCategoryNameOnly
+);
+
 router.get(
 	'/viewfooditems',
 	authenticate.verifyRestaurant,
@@ -163,23 +176,24 @@ router.get(
 	'vendorItem/:id',
 	authenticate.verifyRestaurant,
 	restaurantController.getVendorItems
-)
+);
 
 router.get(
-	'allVendors/',
+	'/all-vendors/',
 	authenticate.verifyRestaurant,
 	restaurantController.getAllVendors
-)
+);
 
 router.get(
-	'allProducts/',
+	'/all-products/',
 	authenticate.verifyRestaurant,
 	restaurantController.getAllProducts
-)
+);
 
 router.post(
 	'manualOrderStock/:id/:quantity',
 	authenticate.verifyRestaurant,
 	restaurantController.manualOrderStock
-)
+);
+
 module.exports = router;
