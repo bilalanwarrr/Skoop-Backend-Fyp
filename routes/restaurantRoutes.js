@@ -195,9 +195,22 @@ router.get(
 );
 
 router.post(
-	'manualOrderStock/:id/:quantity',
+	'/manualOrderStock/:id/:quantity',
 	authenticate.verifyRestaurant,
 	restaurantController.manualOrderStock
 );
+
+router.get(
+	'/single-vendor/:id',
+	authenticate.verifyRestaurant,
+	restaurantController.getSingleVendor
+)
+
+router.get(
+	'/single-category/:id',
+	authenticate.verifyRestaurant,
+	restaurantController.getSingleCategory
+)
+
 
 module.exports = router;

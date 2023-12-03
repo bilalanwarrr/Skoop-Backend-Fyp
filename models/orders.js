@@ -15,7 +15,7 @@ var Order = new Schema(
 				{
 					user: {
 						type: mongoose.Types.ObjectId,
-						ref: 'FoodItem',
+						ref: 'Customer',
 					},
 					distance: {
 						type: Number,
